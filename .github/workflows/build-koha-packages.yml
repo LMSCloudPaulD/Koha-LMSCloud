@@ -28,7 +28,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: lmscloud/koha-builder
+  IMAGE_NAME: lmscloudpauld/koha-builder
   IMAGE_TAG: latest
 
 jobs:
