@@ -39,8 +39,19 @@ jobs:
       packages: read
 
     steps:
-      - name: Checkout repository
+      - name: Checkout Koha repository
         uses: actions/checkout@v4
+        with:
+          repository: LMSCloud/Koha-LMSCloud
+          ref: ${{ steps.vars.outputs.koha_branch }}
+          path: koha-common
+
+      - name: Checkout L10N repository
+        uses: actions/checkout@v4
+        with:
+          repository: LMSCloud/koha-l10n
+          ref: ${{ steps.vars.outputs.l10n_branch }}
+          path: koha-l10n
 
       - name: Log in to Container Registry
         uses: docker/login-action@v3
@@ -193,6 +204,8 @@ jobs:
       - name: Run package builds
         run: |
           docker run --rm \
+            -v ${{ github.workspace }}/koha-common:/tmp/koha-common \
+            -v ${{ github.workspace }}/koha-l10n:/tmp/koha-l10n \
             -v ${{ github.workspace }}/build-workspace:/workspace \
             -e KOHA_VERSION="${{ steps.vars.outputs.koha_version }}" \
             -e KOHA_BRANCH="${{ steps.vars.outputs.koha_branch }}" \
@@ -201,22 +214,9 @@ jobs:
             --user root \
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} \
             bash -c "
-              # Clone repositories directly in container (avoiding volume mount issues)
-              echo '=== Cloning Repositories ==='
-              cd /tmp
-
-              # Clone Koha-LMSCloud
-              echo 'Cloning Koha-LMSCloud (shallow)...'
-              git clone --depth 1 --branch $KOHA_BRANCH https://github.com/LMSCloud/Koha-LMSCloud.git koha-common
-
-              # Clone koha-l10n
-              echo 'Attempting to clone koha-l10n (shallow)...'
-              git clone --depth 1 --branch $L10N_BRANCH https://github.com/LMSCloud/koha-l10n.git koha-l10n || {
-                echo 'L10N repository not accessible, continuing without it'
-                echo 'This is optional - main Koha package will still be built'
-              }
-
-              # Configure git globally to trust the cloned directories
+              echo '=== Using Checked-out Repositories ==='
+              
+              # Configure git globally to trust the mounted directories
               echo '=== Configuring Git Safe Directories ==='
               git config --global --add safe.directory /tmp/koha-common
               git config --global --add safe.directory /tmp/koha-l10n
@@ -230,7 +230,7 @@ jobs:
               chmod +x /tmp/build-koha.sh
               /tmp/build-koha.sh
 
-              # Build L10N package if repository was cloned
+              # Build L10N package if repository exists
               if [ -d "/tmp/koha-l10n" ]; then
                 echo ''
                 echo '=== Building L10N Package ==='
