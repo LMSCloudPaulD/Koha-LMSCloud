@@ -4,13 +4,13 @@ on:
   workflow_dispatch:
     inputs:
       koha_version:
-        description: "Koha version tag (e.g., 22.11.15lmscloud)"
+        description: "Koha version tag"
         required: true
-        default: "22.11.15lmscloud"
+        default: "22.11.24lmscloud"
       koha_branch:
         description: "Koha branch to build from"
         required: true
-        default: "master"
+        default: "preliminary/backport/bookings"
       l10n_branch:
         description: "Translation branch to use"
         required: true
@@ -18,7 +18,7 @@ on:
       build_email:
         description: "Email for package builds"
         required: true
-        default: "build@lmscloud.de"
+        default: "paul.derscheid@lmscloud.de"
   push:
     tags:
       - "v*"
@@ -42,7 +42,7 @@ jobs:
       - name: Checkout Koha repository
         uses: actions/checkout@v4
         with:
-          repository: LMSCloud/Koha-LMSCloud
+          repository: LMSCloudPaulD/Koha-LMSCloud
           ref: ${{ steps.vars.outputs.koha_branch }}
           path: koha-common
 
