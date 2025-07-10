@@ -1,5 +1,4 @@
 use Modern::Perl;
-use Koha::Installer::Output qw(say_warning say_failure say_success say_info);
 use Array::Utils            qw( array_minus );
 
 return {
@@ -28,7 +27,7 @@ return {
         foreach my $row (@rows_to_insert) { $insert_sth->execute( @{$row} ); $count++; }
 
         if ($count) {
-            say_info( $out, "list_borrowers added to $count users with edit_borrowers" );
+            say( $out, "list_borrowers added to $count users with edit_borrowers" );
         }
 
         # Check for 'circulate' or 'circulate > manage_bookings' permission
@@ -44,7 +43,7 @@ return {
         foreach my $row (@rows_to_insert) { $insert_sth->execute( @{$row} ); $count++; }
 
         if ($count) {
-            say_info( $out, "list_borrowers added to $count users with manage_bookings" );
+            say( $out, "list_borrowers added to $count users with manage_bookings" );
         }
 
         # Check for 'tools' or 'tools > label_creator' permission
@@ -60,7 +59,7 @@ return {
         foreach my $row (@rows_to_insert) { $insert_sth->execute( @{$row} ); $count++; }
 
         if ($count) {
-            say_info( $out, "list_borrowers added to $count users with label_creator" );
+            say( $out, "list_borrowers added to $count users with label_creator" );
         }
 
         # Check for 'serials' or 'serials > routing' permission
@@ -76,7 +75,7 @@ return {
         foreach my $row (@rows_to_insert) { $insert_sth->execute( @{$row} ); $count++ }
 
         if ($count) {
-            say_info( $out, "list_borrowers added to $count users with routing" );
+            say( $out, "list_borrowers added to $count users with routing" );
         }
 
         # Check for 'acquisitions' or 'acquisitions > order_manage' permission
@@ -92,7 +91,7 @@ return {
         foreach my $row (@rows_to_insert) { $insert_sth->execute( @{$row} ); $count++ }
 
         if ($count) {
-            say_info( $out, "list_borrowers added to $count users with order_manage" );
+            say( $out, "list_borrowers added to $count users with order_manage" );
         }
     },
 };

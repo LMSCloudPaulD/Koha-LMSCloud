@@ -1,5 +1,4 @@
 use Modern::Perl;
-use Koha::Installer::Output qw(say_warning say_failure say_success say_info);
 
 return {
     bug_number  => "36120",
@@ -15,16 +14,16 @@ return {
               ADD COLUMN `pickup_library_id` varchar(10) DEFAULT NULL COMMENT 'Identifier for booking pickup library' AFTER `item_id`
                 }
                 ) == 1
-                && say_success( $out, "Added column 'bookings.pickup_library_id'" );
+                && say( $out, "Added column 'bookings.pickup_library_id'" );
 
             my $updated = $dbh->do(
                 q{UPDATE bookings JOIN items ON bookings.item_id = items.itemnumber SET bookings.pickup_library_id = items.homebranch }
             );
 
             if ( $updated != '0E0' ) {
-                say_success( $out, "Set $updated existing bookings pickup location to item homebranch" );
+                say( $out, "Set $updated existing bookings pickup location to item homebranch" );
             } else {
-                say_info( $out, "No bookings found that need updating to include a pickup library" );
+                say( $out, "No bookings found that need updating to include a pickup library" );
             }
 
             $updated = $dbh->do(
@@ -32,7 +31,7 @@ return {
             );
 
             if ( $updated != '0E0' ) {
-                say_success(
+                say(
                     $out,
                     "Set $updated existing bookings pickup location to item holdingbranch where items.homebranch was null"
                 );
@@ -45,7 +44,7 @@ return {
             );
 
             if ( $updated != '0E0' ) {
-                say_warning(
+                say(
                     $out,
                     "Some $updated bookings still had a null pickup location value so we have set them to $firstBranch"
                 );
@@ -56,7 +55,7 @@ return {
               ALTER TABLE bookings
               MODIFY pickup_library_id varchar(10) NOT NULL COMMENT 'Identifier for booking pickup library'
           }
-            ) == 1 && say_success( $out, "Updated column 'bookings.pickup_library_id' to NOT NULL" );
+            ) == 1 && say( $out, "Updated column 'bookings.pickup_library_id' to NOT NULL" );
         }
 
         unless ( foreign_key_exists( 'bookings', 'bookings_ibfk_4' ) ) {
@@ -66,7 +65,7 @@ return {
                     ADD CONSTRAINT `bookings_ibfk_4` FOREIGN KEY (`pickup_library_id`) REFERENCES `branches` (`branchcode`) ON DELETE CASCADE ON UPDATE CASCADE
                 }
                 ) == 1
-                && say_success( $out, "Added foreign key 'bookings_ibfk_4' to column 'bookings.pickup_library_id'" );
+                && say( $out, "Added foreign key 'bookings_ibfk_4' to column 'bookings.pickup_library_id'" );
         }
     },
 };

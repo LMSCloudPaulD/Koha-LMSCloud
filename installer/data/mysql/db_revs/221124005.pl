@@ -1,5 +1,4 @@
 use Modern::Perl;
-use Koha::Installer::Output qw(say_warning say_failure say_success say_info);
 
 return {
     bug_number  => '37601',
@@ -9,7 +8,7 @@ return {
         my ( $dbh, $out ) = @{$args}{qw(dbh out)};
 
         if ( column_exists( 'bookings', 'status' ) ) {
-            say_info( $out, q{Column 'status' already exists in 'bookings' table. Skipping...} );
+            say( $out, q{Column 'status' already exists in 'bookings' table. Skipping...} );
 
             return;
         }
@@ -21,9 +20,9 @@ return {
             ADD COLUMN `status` ENUM('new', 'cancelled', 'completed') NOT NULL DEFAULT 'new' COMMENT 'current status of the booking' $after;
         SQL
         if ( $dbh->do($statement) ) {
-            say_success( $out, q{Added column 'bookings.status'} );
+            say( $out, q{Added column 'bookings.status'} );
         } else {
-            say_failure( $out, q{Failed to add column 'bookings.status'} );
+            say( $out, q{Failed to add column 'bookings.status'} );
         }
     },
 };

@@ -1,5 +1,4 @@
 use Modern::Perl;
-use Koha::Installer::Output qw(say_warning say_failure say_success say_info);
 
 return {
     bug_number  => "35906",
@@ -15,7 +14,7 @@ return {
             }
             );
 
-            say_success( $out, "Added column 'itemtypes.bookable'" );
+            say( $out, "Added column 'itemtypes.bookable'" );
         }
 
         $dbh->do(
@@ -24,7 +23,7 @@ return {
         }
         );
 
-        say_success( $out, "Updated column 'items.bookable' allow nullable" );
+        say( $out, "Updated column 'items.bookable' allow nullable" );
 
         $dbh->do(
             q{
@@ -32,7 +31,7 @@ return {
         }
         );
 
-        say_success( $out, "Updated column 'deleteditems.bookable' allow nullable" );
+        say( $out, "Updated column 'deleteditems.bookable' allow nullable" );
 
     },
 };

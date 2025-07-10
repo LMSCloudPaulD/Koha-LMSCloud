@@ -1,5 +1,4 @@
 use Modern::Perl;
-use Koha::Installer::Output qw(say_warning say_failure say_success say_info);
 
 return {
     bug_number  => '37592',
@@ -16,7 +15,7 @@ return {
         SQL
         my $existing_columns = $dbh->selectcol_arrayref($columns_exist_query);
         if ( @{$existing_columns} == 2 ) {
-            say_info(
+            say(
                 $out,
                 q{Columns 'creation_date' and 'modification_date' already exist in 'bookings' table. Skipping...}
             );
@@ -32,15 +31,15 @@ return {
         SQL
         if ( @{$existing_columns} == 0 ) {
             if ( $dbh->do("$creation_date_statement AFTER `end_date`") ) {
-                say_success( $out, q{Added column 'bookings.creation_date'} );
+                say( $out, q{Added column 'bookings.creation_date'} );
             } else {
-                say_failure( $out, q{Failed to add column 'bookings.creation_date': } . $dbh->errstr );
+                say( $out, q{Failed to add column 'bookings.creation_date': } . $dbh->errstr );
             }
 
             if ( $dbh->do("$modification_date_statement AFTER `creation_date`") ) {
-                say_success( $out, q{Added column 'bookings.modification_date'} );
+                say( $out, q{Added column 'bookings.modification_date'} );
             } else {
-                say_failure( $out, q{Failed to add column 'bookings.modification_date': } . $dbh->errstr );
+                say( $out, q{Failed to add column 'bookings.modification_date': } . $dbh->errstr );
             }
 
             return;
@@ -62,9 +61,9 @@ return {
                 }
 
                 if ( $dbh->do($statement) ) {
-                    say_success( $out, "Added column 'bookings.$column'" );
+                    say( $out, "Added column 'bookings.$column'" );
                 } else {
-                    say_failure( $out, "Failed to add column 'bookings.$column': " . $dbh->errstr );
+                    say( $out, "Failed to add column 'bookings.$column': " . $dbh->errstr );
                 }
             }
         }
